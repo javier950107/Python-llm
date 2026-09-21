@@ -9,7 +9,7 @@ from config import (
 )
 
 from agent.prompts import SYSTEM_PROMPT
-from agent.tools import servo_tool, scan_tool
+from agent.tools import servo_tool, scan_tool, move_motor
 
 
 client = OpenAI(
@@ -41,6 +41,18 @@ TOOLS = [
         "function": {
             "name": "scan_environment",
             "description": "Escanea el entorno del robot moviendo el servo y midiendo distancias con el sensor ultrasónico.",
+            "parameters": {
+                "type": "object",
+                "properties": {},
+                "required": []
+            }
+        }
+    },
+    {
+        "type": "function",
+        "function": {
+            "name": "motors",
+            "description": "Te puedes mover con los motores de las llantas son dos motores.",
             "parameters": {
                 "type": "object",
                 "properties": {},
@@ -123,6 +135,19 @@ async def ask_llm(user_message: str):
             print()
 
             result = await scan_tool()
+
+
+        # ---------------------------
+        # Moverse
+        # ---------------------------
+
+        elif tool_name == "motors" :
+
+            print()
+            print("Herramient: motors")
+            print()
+
+            result = await move_motor()
 
         else:
 
