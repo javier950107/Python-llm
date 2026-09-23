@@ -63,7 +63,8 @@ Python-llm/
 │
 ├── perception/
 │   ├── scanner.py             ← barrido servo 0-180 + análisis
-│   └── exploration.py         ← bucle explore(): avanza, escanea, gira
+│   ├── exploration.py         ← bucle explore(): avanza, escanea, gira
+│   └── follower.py            ← bucle follow_target(): sigue al objeto más cercano
 │
 └── test/
     ├── test_servo.py          ← mueve el servo
@@ -71,6 +72,7 @@ Python-llm/
     ├── test_scan.py           ← escaneo completo
     ├── test_move.py           ← avanza N cm
     ├── test_explore.py        ← exploración autónoma sin LLM
+    ├── test_follow.py         ← seguimiento autónomo sin LLM
     ├── robot_test.py          ← consola cruda WebSocket
     └── ia_test.py             ← ping al LLM sin robot
 ```
@@ -147,9 +149,13 @@ python test/test_scan.py
 # 6) Exploración autónoma sin LLM
 python test/test_explore.py 3 15 25       # 3 pasos, 15 cm, 25 cm seguros
 
-# 7) Chat con el LLM
+# 7) Seguimiento autónomo sin LLM
+python test/test_follow.py 10 25 100 10   # 10 iters, 25-100 cm, 10 cm/paso
+
+# 8) Chat con el LLM
 python main.py
 Tú: explora el entorno
+Tú: sígueme
 ```
 
 ---
@@ -167,6 +173,7 @@ Estos son ejemplos que funcionan bien con el `SYSTEM_PROMPT` actual:
 | *"gira 90 grados a la derecha"* | `turn(direction="right", degrees=90)` |
 | *"escanea alrededor"* | `scan_environment()` |
 | *"explora el entorno sin chocar"* | `explore_environment()` |
+| *"sígueme"* / *"persigue lo que tengas más cerca"* | `follow_target()` |
 | *"detente"* | `stop()` |
 
 ---

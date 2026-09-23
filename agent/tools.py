@@ -7,6 +7,7 @@ from hardware.motors import (
 )
 from perception.scanner import scan_environment
 from perception.exploration import explore
+from perception.follower import follow_target
 
 
 async def servo_tool(angle: int):
@@ -52,4 +53,19 @@ async def explore_tool(
         max_steps=max_steps,
         step_cm=step_cm,
         safe_distance=safe_distance,
+    )
+
+
+async def follow_tool(
+    max_iterations: int = 20,
+    min_distance: float = 25.0,
+    max_distance: float = 100.0,
+    step_cm: float = 10.0,
+):
+
+    return await follow_target(
+        max_iterations=max_iterations,
+        min_distance=min_distance,
+        max_distance=max_distance,
+        step_cm=step_cm,
     )

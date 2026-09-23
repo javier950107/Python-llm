@@ -71,6 +71,34 @@ async def move_servo(angle: int):
 
 
 # =====================================================
+# ESCANEO DE RANGO (RÁPIDO)
+# =====================================================
+
+async def scan_range(start: int = 0, end: int = 180, step: int = 10):
+    """
+    Pide al ESP32 que barra el servo del ángulo `start` al `end` con
+    incremento `step` y devuelve todas las mediciones en una sola
+    respuesta. Mucho más rápido que hacer scan desde el cliente.
+    """
+
+    # Timeout aproximado: 0.2 s por punto medido + margen.
+    puntos = max(1, (abs(end - start) // max(1, step)) + 1)
+    timeout = max(10.0, puntos * 0.3 + 3.0)
+
+    response = await send_command(
+        {
+            "cmd": "scan_range",
+            "start": int(start),
+            "end": int(end),
+            "step": int(step),
+        },
+        timeout=timeout,
+    )
+
+    return response["measurements"]
+
+
+# =====================================================
 # STOP
 # =====================================================
 

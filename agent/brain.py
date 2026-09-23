@@ -16,6 +16,7 @@ from agent.tools import (
     turn_tool,
     stop_tool,
     explore_tool,
+    follow_tool,
 )
 
 
@@ -121,6 +122,47 @@ TOOLS = [
     {
         "type": "function",
         "function": {
+            "name": "follow_target",
+            "description":
+                "Sigue al objeto más cercano dentro de una ventana "
+                "de distancia (por defecto entre 25 y 100 cm). "
+                "Escanea el frente, gira hacia el objetivo y ajusta "
+                "distancia avanzando o retrocediendo. Se detiene "
+                "cuando se cumplen las iteraciones o cuando pierde "
+                "al objetivo varias veces seguidas. Devuelve un log "
+                "con lo que hizo.",
+            "parameters": {
+                "type": "object",
+                "properties": {
+                    "max_iterations": {
+                        "type": "integer",
+                        "description":
+                            "Cuántas iteraciones de "
+                            "escanear-girar-mover ejecutar."
+                    },
+                    "min_distance": {
+                        "type": "number",
+                        "description":
+                            "Distancia mínima al objetivo (cm)."
+                    },
+                    "max_distance": {
+                        "type": "number",
+                        "description":
+                            "Distancia máxima al objetivo (cm)."
+                    },
+                    "step_cm": {
+                        "type": "number",
+                        "description":
+                            "Cuántos cm avanzar o retroceder por paso."
+                    }
+                },
+                "required": []
+            }
+        }
+    },
+    {
+        "type": "function",
+        "function": {
             "name": "explore_environment",
             "description":
                 "Explora el entorno de forma autónoma: avanza "
@@ -188,6 +230,14 @@ async def _dispatch_tool(name: str, arguments: dict):
             max_steps=arguments.get("max_steps", 8),
             step_cm=arguments.get("step_cm", 20.0),
             safe_distance=arguments.get("safe_distance", 30.0),
+        )
+
+    if name == "follow_target":
+        return await follow_tool(
+            max_iterations=arguments.get("max_iterations", 20),
+            min_distance=arguments.get("min_distance", 25.0),
+            max_distance=arguments.get("max_distance", 100.0),
+            step_cm=arguments.get("step_cm", 10.0),
         )
 
     return {"error": f"Herramienta desconocida: {name}"}

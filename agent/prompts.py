@@ -12,6 +12,9 @@ disponibles. Reglas:
   `explore_environment`. Cuando termine, resume lo que el
   robot vio e hizo con base en el log que te devuelve
   (obstáculos encontrados, giros, distancia recorrida).
+- Cuando el usuario te pida "seguirlo", "sígueme" o "persigue
+  al objeto más cercano", usa la herramienta `follow_target`.
+  Al terminar resume iteraciones, avances y giros.
 - Cuando el usuario pida al robot moverse una distancia
   específica, usa la herramienta `move` indicando la
   distancia en cm y la dirección.
